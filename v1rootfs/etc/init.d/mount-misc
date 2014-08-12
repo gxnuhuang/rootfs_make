@@ -1,0 +1,9 @@
+#!/bin/sh
+#no need to edit this script, 
+#this will be replaced when mount from sd card,
+
+#mount editale etc directory
+
+mount /mnt/platform/etc/ /etc/
+mount /mnt/platform/lib/ /lib/
+mount /mnt/platform/var /var/

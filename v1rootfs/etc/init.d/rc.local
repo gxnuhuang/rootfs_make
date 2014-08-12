@@ -1,0 +1,29 @@
+#!/bin/sh
+#add product specified script here
+
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/mnt/platform/lib"
+
+
+#/mnt/platform/etc/init.d/dbus-1 start
+
+#/mnt/platform/etc/init.d/bluetooth start
+
+#echo 750000000 >/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed
+#/mnt/platform/bin/wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant.conf
+ifconfig wlan0 down
+ifconfig wlan0 hw ether DE:AD:BE:EF:00:46
+
+ifconfig wlan0 192.168.3.176
+#/mnt/platform/sbin/alsactl restore -f /etc/asound.state
+
+#/mnt/platform/sbin/alsactl restore -f /etc/sound.mute
+#amixer sset "Left Input Mixer Boost" off
+#sleep 1
+#amixer sset "Left Input Mixer Boost" on
+#/etc/mute.sh
+#/mnt/platform/sbin/alsactl restore -f /etc/asound.state
+#echo 5 > /sys/class/input/input0/position
+#/mnt/platform/sbin/acce_record &
+#cd /mnt/storage/bin/;
+# ./aitalk -de &
+#/mnt/platform/bin/serialtest & 

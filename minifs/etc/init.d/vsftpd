@@ -1,0 +1,19 @@
+#!/bin/sh
+#no need to edit this script, 
+#this will be replaced when mount from sd card
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/mnt/platform/lib"
+
+case "$1" in
+start)
+        echo  "Start vsftpd deamon..."
+        chown root /etc/vsftpd.conf
+        /mnt/platform/sbin/vsftpd /etc/vsftpd.conf &
+;;
+stop)
+        :
+;;
+*)
+        echo "Usage: /etc/init.d/vsftpd {start|stop}"
+        exit 1
+esac
+

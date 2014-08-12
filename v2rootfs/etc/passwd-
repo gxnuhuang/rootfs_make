@@ -1,0 +1,4 @@
+root:GmQ1dBtLQussk:0:0:root:/:/bin/sh
+zhdgps:x:100:1002:Linux User,,,:/home/zhdgps:/bin/false
+nobody:x:1000:1000:Linux User,,,:/home/nobody:/bin/false
+FTP:x:1003:1003:Linux User,,,:/home/FTP:/bin/sh

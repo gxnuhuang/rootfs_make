@@ -1,0 +1,28 @@
+#!/bin/sh
+#no need to edit this script, 
+#this will be replaced when mount from sd card
+
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/mnt/platform/lib"
+
+thttpd=/mnt/platform/sbin/thttpd
+
+test -x "$thttpd" || exit 0
+
+case "$1" in
+  start)
+    echo  "Starting thttpd daemon..."
+         $thttpd -C /etc/thttpd.conf 
+
+    ;;
+  stop)
+    echo  "Stopping thttpd daemon..."
+        killall thttpd
+
+    ;;
+  *)
+    echo "Usage: /etc/init.d/thttpd {start|stop}"
+    exit 1
+esac
+
+exit 0
+

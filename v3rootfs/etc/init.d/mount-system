@@ -1,0 +1,75 @@
+#!/bin/sh
+
+echo "Press 'Enter' to interrupt boot up"
+echo
+timeout -t 1 /usr/super.sh
+if [ $? -eq 0 ]; then
+	echo "<-----Safe Mode----->"
+	exit 1;
+fi
+
+#check if eMMC be initialized as mmcblk1
+if ! test -b /dev/mmcblk1
+then
+	#which means eMMC might had been initialized as mmcblk0
+	echo "eMMC at mmcblk0"			
+	device=0
+else
+	device=1
+fi
+
+#for developer
+if [ ${device} -eq 1 ]
+then
+	mount /dev/mmcblk0p1 /media
+	
+	#run script in background
+	if test -x /media/fix.sh
+	then
+		echo "find fix.sh" >> /media/fix.log
+		cp /media/fix.sh /tmp
+		chmod +x /tmp/fix.sh
+		/tmp/fix.sh >> /media/fix.log
+		mv /media/fix.sh /media/fix.sh.used
+	fi
+	
+	umount /media
+fi
+
+mount /dev/mmcblk"${device}"p3 /mnt/platform
+if test -f /mnt/platform/etc/fixpartition
+then
+	echo "<-----fixing partition table----->"
+	rm -f /mnt/platform/etc/fixpartition
+	cp /mnt/platform/sbin/e2fsck /tmp
+	sync
+	umount /mnt/platform
+	
+	/tmp/e2fsck -p /dev/mmcblk"${device}"p3 > /tmp/partition.log
+	mount /dev/mmcblk"${device}"p3 /mnt/platform
+	cp /tmp/partition.log /mnt/platform/etc
+	sync
+fi
+umount /mnt/platform
+
+/etc/init.d/safely-mount-disk.sh ${device}
+
+
+if test -d /mnt/platform/etc
+then
+	echo "mount disk succeeded."
+	/etc/init.d/mount-misc
+	/etc/init.d/flashdrive.sh ${device}
+else
+	echo
+	echo "#########################################################"
+	echo "if you see this message, "
+	echo "it means system failed to mount /mnt/platform/etc to /etc"
+	echo "#########################################################"
+	echo
+	exit 1;
+fi
+
+
+exit 0;
+
