@@ -1,0 +1,93 @@
+#!/bin/sh
+
+#check if eMMC be initialized as mmcblk1
+date > /tmp/mount0time
+if ! test -b /dev/mmcblk1
+then
+	#which means eMMC might had been initialized as mmcblk0
+	echo "eMMC at mmcblk0"			
+	device=0
+else
+	device=1
+	mount /dev/mmcblk0p1 /media/mmcblk0p1
+fi
+
+
+#for developer
+if [ ${device} -eq 1 ]
+then
+	mount /dev/mmcblk0p1 /media
+	
+	#run script in background
+	if test -x /media/fix.sh
+	then
+		echo "find fix.sh" >> /media/fix.log
+		cp /media/fix.sh /tmp
+		chmod +x /tmp/fix.sh
+		/tmp/fix.sh >> /media/fix.log
+		mv /media/fix.sh /media/fix.sh.used
+	fi
+	
+	umount /media
+fi
+
+mount /dev/mmcblk"${device}"p3 /mnt/platform
+
+
+repartition=0
+if test -f /mnt/platform/etc/repartition
+then
+	repartition=1
+	rm /mnt/platform/etc/repartition
+fi
+
+if test -f /mnt/platform/etc/fixpartition
+then
+	echo "<-----fixing partition table----->"
+	rm -f /mnt/platform/etc/fixpartition
+	cp /mnt/platform/sbin/e2fsck /tmp
+	cp /mnt/platform/sbin/tune2fs /tmp
+	sync
+	umount /mnt/platform
+
+	/tmp/e2fsck -y /dev/mmcblk"${device}"p3 > /tmp/partition.log
+	/tmp/tune2fs -O extents,uninit_bg,dir_index,has_journal /dev/mmcblk"${device}"p3
+	/tmp/e2fsck -y /dev/mmcblk"${device}"p3 >> /tmp/partition.log
+	mount /dev/mmcblk"${device}"p3 /mnt/platform
+	cp /tmp/partition.log /mnt/platform/etc/
+	sync
+fi
+umount /mnt/platform
+
+/etc/init.d/safely-mount-disk.sh ${device} ${repartition}
+
+#timeout -t 1 /usr/super.sh
+/sbin/readtout_ms 300
+if [ $? -eq 0 ]; then
+	echo "<-----Safe Mode----->"
+	/etc/init.d/flashdrive.sh ${device}
+	exit 1;
+fi
+
+if test -d /mnt/platform/sbin
+then
+	echo "mount disk succeeded."
+	/etc/init.d/mount-misc
+	echo "run firmware check."
+	/mnt/platform/sbin/upgrade_fw
+else
+	echo
+	echo "#########################################################"
+	echo "if you see this message, "
+	echo "it means system failed to mount /mnt/platform/sbin to /sbin"
+	echo "#########################################################"
+	echo
+	echo "try installing firmware."
+	/sbin/install_fw 
+	/etc/init.d/flashdrive.sh ${device}
+	exit 1;
+fi
+
+date > /tmp/mount1time
+exit 0;
+

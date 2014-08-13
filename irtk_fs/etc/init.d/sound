@@ -1,0 +1,7 @@
+#!/bin/sh
+date > /tmp/audiotime
+alsactl restore
+echo "hzq play mp3....."
+#/bin/madplay /home/turn_on_music.mp3 -o wav:- | aplay &
+/bin/madplay /home/mymusic.mp3 -o wav:- | aplay &
+date > /tmp/endaudiotime

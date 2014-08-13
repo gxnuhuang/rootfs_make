@@ -17,6 +17,7 @@ export PATH runlevel prevlevel
 mount -t tmpfs mdev /dev
 echo /bin/mdev > /proc/sys/kernel/hotplug
 mdev -s
+echo "hzq......."
 #needed for telnet to work properly
 #/bin/mkdir /dev/pts
 #/bin/mount n /dev/pts -t devpts
