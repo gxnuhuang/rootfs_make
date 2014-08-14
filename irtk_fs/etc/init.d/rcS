@@ -13,31 +13,31 @@ umask 022
 export PATH runlevel prevlevel
 
 /bin/mount -a
-
-
+# build mdev 
+mount -t tmpfs mdev /dev
+echo /bin/mdev > /proc/sys/kernel/hotplug
+mdev -s
 #needed for telnet to work properly
 /bin/mkdir /dev/pts
+
 /bin/mount n /dev/pts -t devpts
 
-/bin/mkdir -p /tmp/run
-/bin/mkdir -p /tmp/lock
+#/bin/mkdir -p /tmp/run
+#/bin/mkdir -p /tmp/lock
 
 #	Make sure proc is mounted
 #
 [ -d "/proc/1" ] || mount /proc
+#/bin/mkdir -p /huan
 
-echo -e '\000\000\000\000' > /proc/sys/kernel/hotplug
+if [ -e /dev/mmcblk0p1 ]
+then
+     echo "hzq mounting mmc1 "
+    /bin/mount    /dev/mmcblk0p1 /mnt 
+    modprobe g_mass_storage file=/dev/mmcblk0p1    
+fi
 
-
-#
-#	See if system needs to be setup. This is ONLY meant to
-#	be used for the initial setup after a fresh installation!
-#
-#if [ -x /sbin/unconfigured.sh ]
-#then
-#  /sbin/unconfigured.sh
-#fi
-
+# mount 
 #
 #	Source defaults.
 #
@@ -46,7 +46,7 @@ echo -e '\000\000\000\000' > /proc/sys/kernel/hotplug
 #
 #	Trap CTRL-C &c only in this shell so we can interrupt subprocesses.
 #
-trap ":" INT QUIT TSTP
+#trap ":" INT QUIT TSTP
 
 #
 #	Call all parts in order.
