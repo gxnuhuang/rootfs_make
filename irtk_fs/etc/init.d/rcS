@@ -30,12 +30,7 @@ mdev -s
 [ -d "/proc/1" ] || mount /proc
 #/bin/mkdir -p /huan
 
-if [ -e /dev/mmcblk0p1 ]
-then
-     echo "hzq mounting mmc1 "
-    /bin/mount    /dev/mmcblk0p1 /mnt 
-    modprobe g_mass_storage file=/dev/mmcblk0p1    
-fi
+
 
 # mount 
 #
