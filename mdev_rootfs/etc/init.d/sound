@@ -1,0 +1,5 @@
+#!/bin/sh
+
+alsactl restore
+/bin/madplay /home/turn_on_music.mp3 -o wav:- | aplay
+
