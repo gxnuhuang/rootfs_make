@@ -1,2 +1,0 @@
-使用的是动态链接来编译的busybox
-针对USB虚拟成网卡，添加DNS设置文件etc/resolv.conf
