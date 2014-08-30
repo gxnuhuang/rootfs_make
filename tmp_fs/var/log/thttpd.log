@@ -1,0 +1,2 @@
+192.168.3.100 - - [01/Jan/2000:02:10:34 +0000] "GET / HTTP/1.1" 200 25000 "" "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.95 Safari/537.36"
+192.168.3.100 - - [01/Jan/2000:02:11:38 +0000] "UNKNOWN  UNKNOWN" 408 0 "" ""
