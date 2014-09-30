@@ -15,12 +15,10 @@ export PATH runlevel prevlevel
 /bin/mount -a
 
 ############### build mdev by zhq (Use mdev substitute udev)############################
-#mount -t tmpfs mdev /dev
+echo "hzq:start mdev start"
+mount -t tmpfs mdev /dev
 echo /sbin/mdev > /proc/sys/kernel/hotplug
 mdev -s
-
-mount -t  tmpfs /dev
-
 #needed for telnet to work properly
 /bin/mkdir /dev/pts
 
