@@ -32,7 +32,7 @@ if [ -d /etc/profile.d ]; then
   done
   unset i
 fi
-
+export PATH="$PATH:/mnt/platform/bin:/mnt/platform/sbin:/media/mmcblk0p1"
 export PATH PS1 OPIEDIR QPEDIR QTDIR EDITOR TERM
 
 umask 022
